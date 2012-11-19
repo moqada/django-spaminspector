@@ -76,7 +76,7 @@ class SpamInspectionMiddleware(object):
         return self.akismet.comment_check(contents, data, build_data=True)
         
     def process_view(self, request, view_func, view_args, view_kwargs):
-        if view_func in self.inspection_views.keys():
+        if view_func in self.inspection_profiles.keys():
             # Check spamness of request
             inspection_profile = self.inspection_profiles[view_func]
             if self._is_spam(request, inspection_profile):
