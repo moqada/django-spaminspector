@@ -27,7 +27,9 @@ __version__ = '1.0.0'
 __date__    = '2011-07-22'
 from django.conf import settings
 from django.http import HttpResponseForbidden
-from django.template.response import TemplateResponse
+from django.shortcuts import HttpResponse
+from django.template import loader
+from django.template import RequestContext
 from django.contrib.sites.models import Site
 from django.core.urlresolvers import get_callable
 from django.core.exceptions import MiddlewareNotUsed
@@ -82,7 +84,10 @@ class SpamInspectionMiddleware(object):
             if self._is_spam(request, inspection_profile):
                 # Detected as spam
                 if settings.SPAMINSPECTOR_SPAM_TEMPLATE:
-                    return TemplateResponse(request, settings.SPAMINSPECTOR_SPAM_TEMPLATE, status=403)
+                    rendered = loader.render_to_string(
+                        settings.SPAMINSPECTOR_SPAM_TEMPLATE,
+                        context_instance=RequestContext(request))
+                    return HttpResponse(rendered, status=403)
                 else:
                     return HttpResponseForbidden("Your comment was detected as a SPAM")
         return view_func(request, *view_args, **view_kwargs)
