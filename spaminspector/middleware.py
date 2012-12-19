@@ -90,4 +90,4 @@ class SpamInspectionMiddleware(object):
                     return HttpResponse(rendered, status=403)
                 else:
                     return HttpResponseForbidden("Your comment was detected as a SPAM")
-        return view_func(request, *view_args, **view_kwargs)
+        return None
